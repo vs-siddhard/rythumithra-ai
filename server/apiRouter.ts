@@ -5,7 +5,7 @@ import {
   complexAgronomyAnalysis,
   synthesizeSpeechAudio,
   processTelephonyVoiceQuery,
-} from "./geminiService";
+} from "./geminiService.ts";
 
 export const apiRouter = express.Router();
 

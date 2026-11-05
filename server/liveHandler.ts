@@ -1,6 +1,6 @@
 import { WebSocketServer, WebSocket } from "ws";
 import { Server as HttpServer } from "http";
-import { ai } from "./geminiService";
+import { ai } from "./geminiService.ts";
 import { Modality, LiveServerMessage } from "@google/genai";
 
 export function setupLiveWebSocket(server: HttpServer) {
