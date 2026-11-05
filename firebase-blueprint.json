@@ -1,0 +1,346 @@
+{
+  "entities": {
+    "FarmerProfile": {
+      "title": "FarmerProfile",
+      "description": "Farmer user profile, preferred dialect, and farm parameters",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Farmer full name",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Farmer email address",
+          "maxLength": 100
+        },
+        "phone": {
+          "type": "string",
+          "description": "Farmer phone contact or toll-free reference",
+          "maxLength": 20
+        },
+        "preferredLanguage": {
+          "type": "string",
+          "description": "Dialect code: en, te, hi, or ta",
+          "enum": ["en", "te", "hi", "ta"]
+        },
+        "district": {
+          "type": "string",
+          "description": "Agricultural district",
+          "maxLength": 80
+        },
+        "state": {
+          "type": "string",
+          "description": "State or province",
+          "maxLength": 80
+        },
+        "acreage": {
+          "type": "number",
+          "description": "Cultivated land area in acres"
+        },
+        "primaryCrops": {
+          "type": "string",
+          "description": "Comma separated crop tags",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last updated timestamp"
+        }
+      },
+      "required": ["userId", "displayName", "preferredLanguage"]
+    },
+    "MarketPrice": {
+      "title": "MarketPrice",
+      "description": "Daily commodity market rates and arbitrage analysis",
+      "type": "object",
+      "properties": {
+        "marketId": {
+          "type": "string",
+          "description": "Unique market identifier",
+          "maxLength": 64
+        },
+        "marketName": {
+          "type": "string",
+          "description": "Name of the mandi or market yard",
+          "maxLength": 100
+        },
+        "cropCategory": {
+          "type": "string",
+          "description": "Crop category e.g. Paddy, Cotton, Chili, Tomato",
+          "maxLength": 60
+        },
+        "variety": {
+          "type": "string",
+          "description": "Specific variety or grade",
+          "maxLength": 60
+        },
+        "localModalPrice": {
+          "type": "number",
+          "description": "Current local collection center modal price per quintal"
+        },
+        "terminalModalPrice": {
+          "type": "number",
+          "description": "Benchmark terminal wholesale hub modal price per quintal"
+        },
+        "dailyDeltaPercentage": {
+          "type": "number",
+          "description": "24-hour rate delta percentage"
+        },
+        "logisticsCostPerQtl": {
+          "type": "number",
+          "description": "Estimated transport and cess cost per quintal"
+        },
+        "netArbitrageSpread": {
+          "type": "number",
+          "description": "Net spread after logistics deduction"
+        },
+        "arbitrageAlert": {
+          "type": "boolean",
+          "description": "True if net spread exceeds 8% threshold"
+        },
+        "state": {
+          "type": "string",
+          "description": "State region",
+          "maxLength": 60
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of rate update"
+        }
+      },
+      "required": ["marketId", "cropCategory", "localModalPrice", "terminalModalPrice"]
+    },
+    "WeatherAlert": {
+      "title": "WeatherAlert",
+      "description": "Hyperlocal agrometeorological indicators and spray suitability",
+      "type": "object",
+      "properties": {
+        "regionId": {
+          "type": "string",
+          "description": "Identifier for the agronomic micro-region",
+          "maxLength": 64
+        },
+        "regionName": {
+          "type": "string",
+          "description": "Friendly name of region",
+          "maxLength": 100
+        },
+        "tempCelsius": {
+          "type": "number",
+          "description": "Ambient temperature in Celsius"
+        },
+        "humidityPercent": {
+          "type": "number",
+          "description": "Relative humidity percentage"
+        },
+        "soilMoistureSurface": {
+          "type": "number",
+          "description": "0-10cm rootzone soil moisture percentage"
+        },
+        "soilMoistureDeep": {
+          "type": "number",
+          "description": "10-40cm rootzone soil moisture percentage"
+        },
+        "precipitationProb12h": {
+          "type": "number",
+          "description": "Next 12 hours rain probability"
+        },
+        "spraySuitability": {
+          "type": "string",
+          "description": "Decision badge: FAVORABLE, UNFAVORABLE, or CAUTION",
+          "enum": ["FAVORABLE", "UNFAVORABLE", "CAUTION"]
+        },
+        "sprayGuidance": {
+          "type": "string",
+          "description": "Actionable agronomist spraying guidance",
+          "maxLength": 300
+        },
+        "riskLevel": {
+          "type": "string",
+          "description": "Risk assessment level",
+          "enum": ["Low", "Medium", "Severe"]
+        },
+        "conditionText": {
+          "type": "string",
+          "description": "Short weather descriptor",
+          "maxLength": 80
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last reading timestamp"
+        }
+      },
+      "required": ["regionId", "tempCelsius", "spraySuitability"]
+    },
+    "CropDiagnostic": {
+      "title": "CropDiagnostic",
+      "description": "Computer vision leaf disease diagnosis and treatment plan",
+      "type": "object",
+      "properties": {
+        "diagnosticId": {
+          "type": "string",
+          "description": "Unique diagnosis ID",
+          "maxLength": 64
+        },
+        "userId": {
+          "type": "string",
+          "description": "ID of farmer who submitted scan",
+          "maxLength": 128
+        },
+        "cropName": {
+          "type": "string",
+          "description": "Crop type detected",
+          "maxLength": 60
+        },
+        "diseaseIdentified": {
+          "type": "string",
+          "description": "Pathology or physiological disorder",
+          "maxLength": 120
+        },
+        "confidenceScore": {
+          "type": "number",
+          "description": "Prediction confidence between 0.0 and 1.0"
+        },
+        "severity": {
+          "type": "string",
+          "description": "Damage severity level",
+          "enum": ["Low", "Moderate", "Severe"]
+        },
+        "organicRemedies": {
+          "type": "string",
+          "description": "Natural bio-remedies text or JSON summary",
+          "maxLength": 1000
+        },
+        "chemicalRemedies": {
+          "type": "string",
+          "description": "Standard chemical compound and dosage recommendations",
+          "maxLength": 1000
+        },
+        "preventiveMeasures": {
+          "type": "string",
+          "description": "Agronomic preventive actions",
+          "maxLength": 1000
+        },
+        "audioAdvisoryScript": {
+          "type": "string",
+          "description": "Text script for audio playback",
+          "maxLength": 1000
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Image reference or data snippet",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Scan submission timestamp"
+        }
+      },
+      "required": ["diagnosticId", "userId", "cropName", "diseaseIdentified", "severity"]
+    },
+    "FarmerCall": {
+      "title": "FarmerCall",
+      "description": "Telephony voice call transcript and synthesized resolution",
+      "type": "object",
+      "properties": {
+        "callSid": {
+          "type": "string",
+          "description": "Telephony provider call SID or mock SID",
+          "maxLength": 64
+        },
+        "userId": {
+          "type": "string",
+          "description": "Associated farmer ID if recognized",
+          "maxLength": 128
+        },
+        "callerNumber": {
+          "type": "string",
+          "description": "Masked caller phone number",
+          "maxLength": 30
+        },
+        "transcribedQuery": {
+          "type": "string",
+          "description": "Speech-to-text transcript from caller",
+          "maxLength": 500
+        },
+        "intentClassified": {
+          "type": "string",
+          "description": "Classified intent e.g. MARKET_PRICE, WEATHER_SPRAY, CROP_DISEASE, FERTILIZER",
+          "maxLength": 80
+        },
+        "synthesizedResponse": {
+          "type": "string",
+          "description": "Grounded AI Agronomist response delivered via voice",
+          "maxLength": 1000
+        },
+        "language": {
+          "type": "string",
+          "description": "Spoken language code",
+          "enum": ["te", "hi", "ta", "en"]
+        },
+        "durationSeconds": {
+          "type": "number",
+          "description": "Call duration in seconds"
+        },
+        "status": {
+          "type": "string",
+          "description": "Call status",
+          "enum": ["completed", "in-progress", "queued"]
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Call timestamp"
+        }
+      },
+      "required": ["callSid", "transcribedQuery", "synthesizedResponse", "status"]
+    },
+    "TestConnection": {
+      "title": "TestConnection",
+      "description": "Firestore connectivity test document",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Connection test status"
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/test/{testId}": {
+      "schema": "TestConnection",
+      "description": "Public read path to test Firestore connectivity on boot"
+    },
+    "/farmers/{farmerId}": {
+      "schema": "FarmerProfile",
+      "description": "Farmer profile documents isolated by authenticated user ID"
+    },
+    "/market_prices/{marketId}": {
+      "schema": "MarketPrice",
+      "description": "Global and local commodity prices open for public read and agronomist updates"
+    },
+    "/weather_alerts/{alertId}": {
+      "schema": "WeatherAlert",
+      "description": "Hyperlocal agrometeorology alerts open for read"
+    },
+    "/crop_diagnostics/{diagnosticId}": {
+      "schema": "CropDiagnostic",
+      "description": "Crop disease diagnostic records owned by individual farmers"
+    },
+    "/farmer_calls/{callId}": {
+      "schema": "FarmerCall",
+      "description": "Telephony voice call transcripts and AI agronomist audio advisory logs"
+    }
+  }
+}

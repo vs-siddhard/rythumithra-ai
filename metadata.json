@@ -1,0 +1,11 @@
+{
+  "name": "RythuMithra - Inclusive Agri Intelligence Platform & Telephony AI",
+  "description": "Empowering smallholder farmers with real-time commodity arbitrage, agrometeorological early warnings, multimodal leaf pathology diagnostics, and inclusive zero-screen voice telephony AI.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

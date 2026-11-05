@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Public connection test path
+    match /test/{testId} {
+      allow read: if true;
+    }
+
+    // Farmer user profile
+    match /farmers/{farmerId} {
+      allow get: if isValidId(farmerId) && isOwner(farmerId);
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(farmerId) && isOwner(farmerId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 100
+        && request.resource.data.preferredLanguage in ['en', 'te', 'hi', 'ta'];
+      allow update: if isValidId(farmerId) && isOwner(farmerId)
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() <= 100;
+      allow delete: if isValidId(farmerId) && isOwner(farmerId);
+    }
+
+    // Commodity Market Prices (Publicly readable to dismantle middleman pricing monopoly)
+    match /market_prices/{marketId} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidId(marketId);
+    }
+
+    // Microclimate Agrometeorological Alerts
+    match /weather_alerts/{alertId} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidId(alertId);
+    }
+
+    // Crop Leaf Diagnostics
+    match /crop_diagnostics/{diagnosticId} {
+      allow get: if isValidId(diagnosticId) && isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(diagnosticId) && isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.cropName is string
+        && request.resource.data.diseaseIdentified is string;
+      allow update: if isValidId(diagnosticId) && isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId;
+      allow delete: if isValidId(diagnosticId) && isSignedIn()
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // Telephony IVR Call Records
+    match /farmer_calls/{callId} {
+      allow get: if isValidId(callId) && isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(callId) && isSignedIn()
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isValidId(callId) && isSignedIn()
+        && resource.data.userId == request.auth.uid;
+      allow delete: if isValidId(callId) && isSignedIn()
+        && resource.data.userId == request.auth.uid;
+    }
+  }
+}
